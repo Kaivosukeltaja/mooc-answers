@@ -1,0 +1,24 @@
+title Muistiinpanon lisäys (SPA)
+
+Käyttäjä->Selain:
+note left of Selain
+Käyttäjä kirjoittaa osoiteriville
+fullstack-exampleapp.herokuapp.com/notes
+end note
+
+Selain->Palvelin: GET fullstack-exampleapp.herokuapp.com/notes
+Palvelin->Selain: 200 OK
+
+Selain->Käyttäjä: Näytä sivu käyttäjälle
+
+Käyttäjä->Selain:
+note left of Selain
+Käyttäjä kirjoittaa muistiinpanon ja
+painaa lisäysnamiskaa
+end note
+
+Selain->Selain: Lisää uusi muistiinpano listaan
+Selain->Käyttäjä: Näytä päivitetty lista
+
+Selain->Palvelin: Tallenna muistiinpano
+Palvelin->Selain: 201 Created

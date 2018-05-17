@@ -1,0 +1,27 @@
+title Authentication Sequence
+
+Käyttäjä->Selain:
+note left of Selain
+Käyttäjä kirjoittaa osoiteriville
+fullstack-exampleapp.herokuapp.com/notes
+end note
+
+Selain->Palvelin: GET fullstack-exampleapp.herokuapp.com/notes
+Palvelin->Selain: 200 OK
+
+Selain->Käyttäjä: Näytä sivu käyttäjälle
+
+Selain->Palvelin: GET /main.js
+Palvelin->Selain: 200 OK
+
+Selain->Selain: Aja scriptit
+
+Selain->Palvelin: GET /data.json
+note left of Palvelin
+Lataa tallennetut muistiinpanot
+end note
+Palvelin->Selain: 200 OK
+
+Selain->Selain: Lisää muistiinpanot sivulle
+
+Selain->Käyttäjä: Näytä muistiinpanot käyttäjälle

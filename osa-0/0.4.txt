@@ -1,0 +1,34 @@
+title Muistiinpanon lisäys
+
+Käyttäjä->Selain:
+note left of Selain
+Käyttäjä kirjoittaa osoiteriville
+fullstack-exampleapp.herokuapp.com/notes
+end note
+
+Selain->Palvelin: GET fullstack-exampleapp.herokuapp.com/notes
+Palvelin->Selain: 200 OK
+
+Selain->Käyttäjä: Näytä sivu käyttäjälle
+
+Käyttäjä->Selain:
+note left of Selain
+Käyttäjä kirjoittaa muistiinpanon ja
+painaa lisäysnamiskaa
+end note
+
+Selain->Palvelin: POST fullstack-exampleapp.herokuapp.com/new_note
+note left of Palvelin
+Palvelin tallentaa uuden muistiinpanon
+end note
+Palvelin->Selain: 302 Location /notes
+
+Selain->Palvelin: GET fullstack-exampleapp.herokuapp.com/notes
+note left of Palvelin
+Palvelin palauttaa saman sivun, jonka
+lataamassa data.jsonissa on uusi
+muistiinpano mukana
+end note
+Palvelin->Selain: 200 OK
+
+Selain->Käyttäjä: Käyttäjä näkee päivitetyn sivun
