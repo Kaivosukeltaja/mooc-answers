@@ -5,7 +5,7 @@ const Sisalto = ({osat}) => {
     return (
         <div>
             {osat.map(osa => (
-                <Osa osa={osa} />
+                <Osa key={osa.nimi} osa={osa} />
             ))}
         </div>
     );
