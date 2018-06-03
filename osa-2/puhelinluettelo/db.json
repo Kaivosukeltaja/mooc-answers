@@ -2,7 +2,7 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "number": "040-123456",
+      "number": "118",
       "id": 1
     },
     {
@@ -19,6 +19,26 @@
       "name": "Lea Kutvonen",
       "number": "040-123456",
       "id": 4
+    },
+    {
+      "name": "Lea Hirvonen",
+      "number": "123123123",
+      "id": 7
+    },
+    {
+      "name": "Uusi",
+      "number": "12121212",
+      "id": 9
+    },
+    {
+      "name": "Niko",
+      "number": "66",
+      "id": 10
+    },
+    {
+      "name": "Niina",
+      "number": "13515",
+      "id": 11
     }
   ]
 }

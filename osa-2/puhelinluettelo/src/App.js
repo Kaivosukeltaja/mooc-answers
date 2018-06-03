@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import AddForm from './components/AddForm';
 import FilterForm from './components/FilterForm';
 import Person from './components/Person';
-import axios from 'axios';
+import Notification from './components/Notification';
+import personsApi from './services/persons';
+import './App.css';
 
 class App extends Component {
   constructor(props) {
@@ -12,7 +14,13 @@ class App extends Component {
       newName: '',
       newPhone: '',
       filter: '',
+      notification: '',
     }
+  }
+
+  showNotification = (notification) => {
+    this.setState({ notification });
+    window.setTimeout(() => this.setState({ notification: '' }), 3000);
   }
 
   handleNameChange = (event) => {
@@ -34,37 +42,70 @@ class App extends Component {
     event.preventDefault();
 
     if (this.state.persons.some(person => person.name === this.state.newName)) {
-      this.rejectSubmit();
+      this.replaceNumber();
     } else {
-      const persons = [ ...this.state.persons ];
-      persons.push({ name: this.state.newName, number: this.state.newPhone });
-      this.setState({
-        newName: '',
-        newPhone: '',
-        persons,
-      });  
+      const newPerson = { name: this.state.newName, number: this.state.newPhone };
+      this.addPerson(newPerson);
     }
   }
 
-  rejectSubmit = () => {
-    alert(`Nimi ${this.state.newName} on jo käytössä! Hölmö!`);
+  addPerson = (newPerson) => {
+    const persons = [ ...this.state.persons ];
+    personsApi.create(newPerson)
+      .then(response => {
+        newPerson.id = response.data.id;
+        persons.push(newPerson);
+        this.setState({
+          newName: '',
+          newPhone: '',
+          persons,
+        });
+        this.showNotification(`Lisättiin ${newPerson.name}`);
+      });
+  }
+
+  replaceNumber = () => {
+    if (window.confirm(`${this.state.newName} on jo olemassa, korvataanko numero uudella?`)) {
+      const person = this.state.persons.find(person => person.name === this.state.newName);
+      person.number = this.state.newPhone;
+      personsApi.update(person)
+      .then(() => {
+        this.showNotification(`${person.name} numero päivitetty`);
+      })
+      .catch(() => {
+        // Joku ehti poistaa, lisätään uutena
+        this.setState({ persons: this.state.persons.filter(p => p.name !== person.name)})
+        this.addPerson(person);
+      });
+    }
     this.setState({
       newName: '',
       newPhone: '',
-    })
+    });
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3001/persons')
+    personsApi.getAll()
       .then(response => {
         this.setState({ persons: response.data });
       })
+  }
+
+  deletePerson(person) {
+    return () => {
+      if (window.confirm(`Poistetaanko ${person.name}?`)) {
+        this.setState({ persons: this.state.persons.filter(p => p !== person)});
+        personsApi.remove(person.id);
+        this.showNotification(`Poistettiin ${person.name}`);
+      }
+    }
   }
 
   render() {
     return (
       <div>
         <h2>Puhelinluettelo</h2>
+        <Notification text={this.state.notification} />
         <FilterForm handleFilterChange={this.handleFilterChange} />
         <AddForm 
           handleSubmit={this.handleSubmit}
@@ -77,7 +118,7 @@ class App extends Component {
             {this.state.persons.filter(person => person.name.toLowerCase()
               .includes(this.state.filter.toLowerCase()))
               .map(person => (
-                <Person key={person.name} person={person} />
+                <Person key={person.name} person={person} onRemove={this.deletePerson(person)} />
             ))}
           </tbody></table>
       </div>
